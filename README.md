@@ -1,39 +1,105 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# 📦 pokemon_package
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+## 1. 📝 Descripción del paquete
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+`pokemon_package` es un **micro paquete independiente** diseñado para manejar la lógica de datos de una aplicación Flutter que consume la [PokéAPI](https://pokeapi.co/).  
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Este paquete encapsula:
+- 📌 **Modelos de datos** para representar Pokémon y sus atributos.
+- 🌍 **Llamadas HTTP** para obtener información de la PokéAPI.
+- ⚡ **Funcionalidades reutilizables**, como:
+  - Manejo de errores en solicitudes HTTP.
+  - Soporte para **paginación** al obtener listas de Pokémon.
 
-## Features
+Este enfoque modular permite que `pokemon_package` sea **reutilizado en múltiples aplicaciones** sin modificar su código base.
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+---
 
-## Getting started
+## 2. 🚀 Instalación
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Para usar `pokemon_package` en tu proyecto Flutter, agrégalo como dependencia en el archivo `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  pokemon_package:
+    git:
+      url: https://github.com/tu_usuario/pokemon_package.git
 ```
 
-## Additional information
+### 📦 Instalar dependencias:
+```bash
+flutter pub get
+```
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+## 3. 🔗 Uso del paquete
+
+### 📌 1. Importar el paquete en tu código:
+```bash
+import 'package:pokemon_package/pokemon_package.dart';
+```
+
+### 📌 2. Obtener la lista de Pokémon (con paginación):
+```bash
+final repository = PokemonRepository();
+
+Future<void> fetchPokemons() async {
+  try {
+    final pokemonList = await repository.getPokemonList(limit: 20, offset: 0);
+    print("Pokémon obtenidos: ${pokemonList.length}");
+  } catch (e) {
+    print("Error al obtener los Pokémon: $e");
+  }
+}
+```
+
+### 📌 3. Obtener detalles de un Pokémon por nombre:
+```bash
+Future<void> fetchPokemonDetails() async {
+  try {
+    final pokemon = await repository.getPokemonByName("pikachu");
+    print("Detalles de Pikachu: ${pokemon.name}, ID: ${pokemon.id}");
+  } catch (e) {
+    print("Error al obtener detalles: $e");
+  }
+}
+```
+
+## 4. 🏗️ Arquitectura del paquete
+### 📂 Estructura del paquete:
+```bash
+.
+└── lib/
+    ├── bloc/
+    │   ├── pokemon/ # bloc de pokémon
+    │   │   ├── single_pokemon_bloc.dart
+    │   │   ├── single_pokemon_event.dart
+    │   │   └── single_pokemon_state.dart
+    │   └── pokemons/ # bloc de lista de pokémons
+    │       ├── pokemon_bloc.dart
+    │       ├── pokemon_event.dart
+    │       └── pokemon_state.dart
+    ├── models/
+    │   └── pokemon.dart # Modelo de Pokémon
+    ├── repositories/
+    │   └── pokemon_repository.dart # Lógica para consumir la API
+    └── pokemon_package.dart # Punto de entrada del paquete
+```
+
+## 5. 🔥 Dependencias utilizadas
+
+Este paquete utiliza las siguientes bibliotecas:
+
+| Paquete      | Propósito                                                |
+|--------------|----------------------------------------------------------|
+| http         | Realizar solicitudes HTTP a la PokéAPI                   |
+| equatable    | Comparar modelos de datos de manera eficiente            |
+| flutter_bloc | (Opcional) Manejo del estado si se usa dentro de un BLoC |
+
+Para instalar todas las dependencias correctamente, simplemente ejecuta:
+
+```bash
+flutter pub get
+```
+
+## 6. 📜 Licencia
+Este proyecto está bajo la MIT License - Eres libre de usarlo, modificarlo y compartirlo.
